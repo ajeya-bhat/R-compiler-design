@@ -1,0 +1,109 @@
+RR:	R
+	;
+
+N:	NL
+	|
+	;
+
+R: 	WHILEBODY R 
+	| IFBODY R 
+	| FORBODY R 
+	| EXP R 
+	| PRINT '('VEC ')'  N R
+	| BROPEN  N R BRCLOSE N R
+	| error N R
+	|
+	;
+
+WHILEBODY :	WHILE N  '(' N COND N')' N BROPEN N R BRCLOSE N
+	;
+
+FORBODY :	FOR N '(' N FIT IN RANGE  N ')' N BROPEN N  R BRCLOSE N
+	;
+
+IFBODY :	 IF N '('  N COND N  ')' N  N  BROPEN  NIFLADDER  
+	;
+
+NIFLADDER :  N R BRCLOSE N
+	|N R BRCLOSE N E
+	;	
+
+E :	 ELSE  N BROPEN N R BRCLOSE N;
+
+EXP :	OP1 RELOP OP1  N
+	| ID ASSIGNOP OP1  N
+	| OP1 N
+	;
+
+COND :	OP1 RELOP OP1 
+	| ID ASSIGNOP OP1 
+	| OP1 LOGICOP OP1 
+	| OP1 
+	;
+
+OP1: OP1 T_pl OP2 {$$=$1+$3;}
+	| OP1 T_min OP2 {$$=$1-$3;}
+	| OP2 {$$=$$;}
+	;
+	
+OP2: OP2 T_mul LIT {$$=$1*$3;}
+	| OP2 T_div LIT {$$=$1/$3;}
+	| LIT {$$=$$;}
+	; 
+
+
+LIT: ID 
+	| NUM {$$=$1;}
+	;
+
+RELOP:T_lt
+	|T_gt
+	|T_eqeq
+	|T_le
+	|T_ge
+	|T_ne
+	;
+
+ASSIGNOP:T_eq
+	|T_ass
+	; 
+
+LOGICOP: T_and
+	| T_or
+	;
+
+RANGE:	NUMC':'NUMC
+	| COPEN VECTOR')'
+	|ID
+	;
+
+
+
+VECTOR:	VEC ',' VECTOR 
+	| VEC
+    | 
+	;
+	
+VEC: 	NUM 
+	| BOOL 
+	| STR 
+	| ID
+	;
+
+NUMC: NUMB;
+
+NUM: 	NUMB
+	;
+
+BOOL: 	TRUE1 
+	| FALSE1
+	;
+
+STR: 	STRI
+	;
+
+FIT: id;
+
+ID: 	id
+	;
+

@@ -1,0 +1,18 @@
+add temp , 1 , 3
+lw temp , R0
+lw a , R0
+L1:
+lt temp , i , 3
+lw temp , R1
+b T2
+add temp , i , 1
+lw temp , R3
+lw i , R3
+b L1
+L2:
+sw a , sp(0)
+call print, 1
+sw param , sp(1)
+
+
+.WORD temp , a , i , param
